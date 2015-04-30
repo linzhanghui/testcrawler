@@ -12,15 +12,16 @@ public class FetchIp138 {
 		
 		org.jsoup.nodes.Document doc = null;
 		Connection con = null;
+//		System.setProperty("proxySet", "true");
 //		System.setProperty("http.proxyHost", "42.121.105.155");
 //		System.setProperty("http.proxyPort", "8888");
 //		con = Jsoup.connect("http://1111.ip138.com/ic.asp")
-		con = Jsoup.connect("http://www.shfair.org.cn/")
-				.userAgent("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E)")
+		con = Jsoup.connect("http://www.163trade.com/")
+				.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:36.0) Gecko/20100101 Firefox/36.0)")
 				.timeout(50000);
 		try {
 			doc = con.get();
-			org.jsoup.select.Elements els = doc.body().select("center");
+			org.jsoup.select.Elements els = doc.body().select("title");
 			for(org.jsoup.nodes.Element el : els){
 				ip = el.text();
 			}
