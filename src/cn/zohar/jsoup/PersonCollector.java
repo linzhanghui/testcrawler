@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class PersonCollector {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(PersonCollector.class);
-	private static final int PAGES = 3;
+	private static final int PAGES = 2;
 
 	public List<Person> collect() {
 		List<Person> persons = new ArrayList<>();
@@ -38,27 +38,26 @@ public class PersonCollector {
 						String href = element.attr("href");
 						LOG.debug("人物链接:" + href);
 						document = Jsoup.connect(href).get();
-						// 基本信息
+						//基本信息
 						String basicInfoCSSQuery = "html body div.wrap div.mainBox div.main div.setBase div.right ul li";
-						LOG.debug("basicInfoCSSQuery: " + basicInfoCSSQuery);
-						Elements basicElements = document
-								.select(basicInfoCSSQuery);
-						Map<String, String> basicInfos = new HashMap<>();
-						for (Element basicElement : basicElements) {
-							String info = basicElement.text()
-									.replace(Jsoup.parse("&nbsp;").text(), " ")
-									.replace(Jsoup.parse("・").text(), "·");
-							if (info != null) {
-								String[] attrs = info.split(":");
-								if (attrs != null && attrs.length == 2) {
-									basicInfos.put(attrs[0], attrs[1]);
-								}
-							}
-						}
+                        LOG.debug("basicInfoCSSQuery: " + basicInfoCSSQuery);
+                        Elements basicElements = document.select(basicInfoCSSQuery);
+                        Map<String, String> basicInfos = new HashMap<>();
+                        for(Element basicElement : basicElements){
+                            String info = basicElement.text().replace(Jsoup.parse("&nbsp;").text(), " ").replace(Jsoup.parse("・").text(), "·");
+                            if(info != null){
+                                String[] attrs = info.split("：");
+                                if(attrs != null && attrs.length == 2){
+                                    basicInfos.put(attrs[0], attrs[1]);
+                                }
+                            }
+                        }
+						
+						// 教育经历
 						String moreCSSQuery = "html body div.wrap div.mainBox div.main div.contBox";
 						LOG.debug("moreCSSQuery: " + moreCSSQuery);
 						Elements moreElements = document.select(moreCSSQuery);
-						// 教育经历
+						
 						List<String> educations = new ArrayList<>();
 						Elements educationElements = moreElements.get(0)
 								.select("div.cont p");
@@ -125,15 +124,12 @@ public class PersonCollector {
 			for (Person person : persons) {
 				LOG.info("采集结果 " + (i++) + " " + person.getName() + " : ");
 
-				if (person.getBasicInfos() != null
-						&& person.getBasicInfos().size() > 0) {
-					LOG.info("基本信息***************************");
-					for (Entry<String, String> basicInfo : person
-							.getBasicInfos().entrySet()) {
-						LOG.info(basicInfo.getKey() + ": "
-								+ basicInfo.getValue());
-					}
-				}
+				if(person.getBasicInfos() != null && person.getBasicInfos().size() > 0){        
+                    LOG.info("基本信息************************************************************");
+                    for(Entry<String, String> basicInfo : person.getBasicInfos().entrySet()){
+                        LOG.info(basicInfo.getKey() +"：" + basicInfo.getValue());
+                    }
+                }
 
 				if (person.getEducations() != null
 						&& person.getEducations().size() > 0) {
